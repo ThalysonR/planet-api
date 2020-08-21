@@ -1,0 +1,14 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API to store and retrieve planets information",
+        "title": "Planets API",
+        "contact": {
+            "name": "Thalyson"
+        },
+        "license": {},
+        "version": "1.0"
+    },
+    "basePath": "/api/v1",
+    "paths": {}
+}

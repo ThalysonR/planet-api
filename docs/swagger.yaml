@@ -1,0 +1,10 @@
+basePath: /api/v1
+info:
+  contact:
+    name: Thalyson
+  description: API to store and retrieve planets information
+  license: {}
+  title: Planets API
+  version: "1.0"
+paths: {}
+swagger: "2.0"
