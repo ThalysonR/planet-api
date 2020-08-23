@@ -1,10 +1,5 @@
 basePath: /api/v1
 definitions:
-  models.InsertResult:
-    properties:
-      id:
-        type: string
-    type: object
   models.PaginaResultado:
     properties:
       dados:
@@ -18,6 +13,8 @@ definitions:
     properties:
       _id:
         type: string
+      aparicoes_em_filmes:
+        type: integer
       atualizado_em:
         type: string
       clima:
@@ -28,14 +25,29 @@ definitions:
         type: string
       terreno:
         type: string
+    required:
+    - clima
+    - nome
+    - terreno
     type: object
   models.PlanetaInput:
     properties:
+      aparicoes_em_filmes:
+        type: integer
       clima:
         type: string
       nome:
         type: string
       terreno:
+        type: string
+    required:
+    - clima
+    - nome
+    - terreno
+    type: object
+  models.ResultadoInsert:
+    properties:
+      id:
         type: string
     type: object
 info:
@@ -46,6 +58,23 @@ info:
   title: Planets API
   version: "1.0"
 paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Retorna links para os controllers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+      summary: Raiz
+      tags:
+      - Raiz
   /planetas:
     get:
       consumes:
@@ -95,7 +124,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.InsertResult'
+            $ref: '#/definitions/models.ResultadoInsert'
         "400":
           description: Bad Request
           schema:
@@ -125,8 +154,8 @@ paths:
           description: Item removido
           schema:
             type: string
-        "404":
-          description: Not found
+        "400":
+          description: Bad request
           schema:
             type: string
       summary: Remover Planeta

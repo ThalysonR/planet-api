@@ -106,7 +106,7 @@ func TestInserePlaneta(t *testing.T) {
 			},
 		}
 		planetaRepoMock := &models.PlanetaMock{
-			InserirPlanetaMock: func(planeta models.PlanetaInput) (*models.InsertResult, error) {
+			InserirPlanetaMock: func(planeta models.PlanetaInput) (*models.ResultadoInsert, error) {
 				if planeta.Nome == "erro" {
 					return nil, errors.New("Erro")
 				}

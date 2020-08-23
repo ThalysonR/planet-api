@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"net/http"
 	"strconv"
 	"strings"
@@ -70,16 +71,24 @@ func (ct *Controller) BuscaPlanetasPaginado(c *gin.Context) {
 	}
 	filtroCampoNome = &pCampoNome
 	if tmplimit, err := strconv.ParseInt(pLimit, 10, 32); err == nil {
-		iLimit = int(tmplimit)
+		iLimit = int(math.Max(float64(tmplimit), 1))
 	}
 	if tmpskip, err := strconv.ParseInt(pSkip, 10, 32); err == nil {
-		iSkip = int(tmpskip)
+		iSkip = int(math.Max(float64(tmpskip), 0))
 	}
 	planetas, err := ct.planetasRepository.BuscaPlanetasPaginado(filtroCampoNome, filtroCampoValor, iSkip, iLimit)
 	if err != nil {
 		log.Debug().Err(err).Msg("falha ao buscar planetas")
 		c.JSON(http.StatusInternalServerError, &gin.H{"erro": "falha ao buscar planetas"})
 		return
+	}
+	prox := fmt.Sprintf("%s/api/v1/planetas?busca=%s&skip=%d&limit=%d", ct.config.ServerHost, pNome, iSkip+iLimit, iLimit)
+	anterior := fmt.Sprintf("%s/api/v1/planetas?busca=%s&skip=%d&limit=%d", ct.config.ServerHost, pNome, iSkip-iLimit, iLimit)
+	if planetas.Pagina < planetas.TotalPaginas {
+		planetas.Proxima = &prox
+	}
+	if planetas.Pagina > 1 {
+		planetas.Anterior = &anterior
 	}
 	c.JSON(http.StatusOK, planetas)
 }
@@ -91,7 +100,7 @@ func (ct *Controller) BuscaPlanetasPaginado(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param planeta_input body models.PlanetaInput true "Dados de um planeta"
-// @Success 201 {object} models.InsertResult
+// @Success 201 {object} models.ResultadoInsert
 // @Failure 400 {string} string "Bad Request"
 // @Failure 500 {string} string "Internal server error"
 // @Router /planetas [post]
@@ -135,7 +144,7 @@ func (ct *Controller) InserirPlaneta(c *gin.Context) {
 // @Produce json
 // @Param id path string true "ID do planeta a ser deletado"
 // @Success 200 {string} string "Item removido"
-// @Failure 404 {string} string "Not found"
+// @Failure 400 {string} string "Bad request"
 // @Router /planetas/{id} [delete]
 func (ct *Controller) RemoverPlaneta(c *gin.Context) {
 	id := c.Param("id")

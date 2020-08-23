@@ -3,7 +3,7 @@ package models
 type PlanetaMock struct {
 	BuscaPlanetaPorIDMock     func(ID string) (*Planeta, error)
 	BuscaPlanetasPaginadoMock func(campoNome *string, campoValor *string, skip int, limit int) (*PaginaResultado, error)
-	InserirPlanetaMock        func(input PlanetaInput) (*InsertResult, error)
+	InserirPlanetaMock        func(input PlanetaInput) (*ResultadoInsert, error)
 	RemoverPlanetaMock        func(ID string) error
 }
 
@@ -15,7 +15,7 @@ func (pm *PlanetaMock) BuscaPlanetasPaginado(campoNome *string, campoValor *stri
 	return pm.BuscaPlanetasPaginadoMock(campoNome, campoValor, skip, limit)
 }
 
-func (pm *PlanetaMock) InserirPlaneta(input PlanetaInput) (*InsertResult, error) {
+func (pm *PlanetaMock) InserirPlaneta(input PlanetaInput) (*ResultadoInsert, error) {
 	return pm.InserirPlanetaMock(input)
 }
 

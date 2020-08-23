@@ -14,7 +14,7 @@ import (
 type IPlanetaRepository interface {
 	BuscaPlanetaPorID(ID string) (*Planeta, error)
 	BuscaPlanetasPaginado(campoNome *string, campoValor *string, skip int, limit int) (*PaginaResultado, error)
-	InserirPlaneta(input PlanetaInput) (*InsertResult, error)
+	InserirPlaneta(input PlanetaInput) (*ResultadoInsert, error)
 	RemoverPlaneta(ID string) error
 }
 
@@ -39,18 +39,13 @@ type respostaPlanetaAgregacao struct {
 	Count []*count   `bson:"count"`
 }
 
-var (
-	databaseName   = "planeta-api"
-	collectionName = "planetas"
-)
-
 func (repo *repository) BuscaPlanetaPorID(ID string) (*Planeta, error) {
 	err := repo.Ping()
 	if err != nil {
 		repo.Connect()
 		return nil, err
 	}
-	collection := repo.client.Database(databaseName).Collection(collectionName)
+	collection := repo.client.Database(repo.databaseName).Collection(repo.planetaCollectionName)
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	var planeta *Planeta
@@ -72,7 +67,7 @@ func (repo *repository) BuscaPlanetasPaginado(campoNome *string, campoValor *str
 		repo.Connect()
 		return nil, err
 	}
-	collection := repo.client.Database(databaseName).Collection(collectionName)
+	collection := repo.client.Database(repo.databaseName).Collection(repo.planetaCollectionName)
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	agreg := agregacaoPaginada(campoNome, campoValor, skip, limit)
@@ -89,19 +84,19 @@ func (repo *repository) BuscaPlanetasPaginado(campoNome *string, campoValor *str
 	cur.Close(ctx)
 	resultados := &PaginaResultado{
 		Dados:        resposta.Dados,
-		Pagina:       skip / limit,
+		Pagina:       (skip / limit) + 1,
 		TotalPaginas: int(math.Ceil(float64(resposta.Count[0].Count) / float64(limit))),
 	}
 	return resultados, nil
 }
 
-func (repo *repository) InserirPlaneta(input PlanetaInput) (*InsertResult, error) {
+func (repo *repository) InserirPlaneta(input PlanetaInput) (*ResultadoInsert, error) {
 	err := repo.Ping()
 	if err != nil {
 		repo.Connect()
 		return nil, err
 	}
-	collection := repo.client.Database(databaseName).Collection(collectionName)
+	collection := repo.client.Database(repo.databaseName).Collection(repo.planetaCollectionName)
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	id := primitive.NewObjectID()
@@ -115,7 +110,7 @@ func (repo *repository) InserirPlaneta(input PlanetaInput) (*InsertResult, error
 	if err != nil {
 		return nil, err
 	}
-	return &InsertResult{ID: id}, nil
+	return &ResultadoInsert{ID: id}, nil
 }
 
 func (repo *repository) RemoverPlaneta(ID string) error {
@@ -124,7 +119,7 @@ func (repo *repository) RemoverPlaneta(ID string) error {
 		repo.Connect()
 		return err
 	}
-	collection := repo.client.Database(databaseName).Collection(collectionName)
+	collection := repo.client.Database(repo.databaseName).Collection(repo.planetaCollectionName)
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	oID, err := primitive.ObjectIDFromHex(ID)

@@ -2,6 +2,7 @@ package models
 
 import (
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type count struct {
@@ -9,9 +10,16 @@ type count struct {
 }
 
 type PaginaResultado struct {
+	Anterior     *string     `json:"anterior"`
 	Dados        interface{} `json:"dados"`
 	Pagina       int         `json:"pagina"`
+	Proxima      *string     `json:"proxima"`
 	TotalPaginas int         `json:"total_paginas"`
+}
+
+// ResultadoInsert é o resultado de uma inserção
+type ResultadoInsert struct {
+	ID primitive.ObjectID
 }
 
 func agregacaoPaginada(fieldName *string, fieldValue *string, skip int, limit int) bson.D {

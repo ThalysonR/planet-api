@@ -12,6 +12,7 @@ type Controller struct {
 	httpClient         httpclient.IHTTPClient
 	config             *AppConfig
 	validate           *validator.Validate
+	controllerNames    []string
 }
 
 // NewController retorna uma instancia de Controller
@@ -21,6 +22,9 @@ func NewController(repository models.IRepository, client httpclient.IHTTPClient,
 		config:             config,
 		httpClient:         client,
 		validate:           validator.New(),
+		controllerNames: []string{
+			"planetas",
+		},
 	}
 }
 

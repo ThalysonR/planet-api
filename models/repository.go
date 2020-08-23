@@ -18,8 +18,22 @@ type IRepository interface {
 }
 
 type repository struct {
-	client         *mongo.Client
-	connectionName string
+	client                *mongo.Client
+	connectionName        string
+	databaseName          string
+	planetaCollectionName string
+}
+
+// NewRepository cria uma instância de repositório e retorna sua interface
+func NewRepository(connectionName string) (IRepository, error) {
+	repository := &repository{
+		client:                nil,
+		connectionName:        connectionName,
+		databaseName:          "planeta-api",
+		planetaCollectionName: "planetas",
+	}
+	repository.Connect()
+	return repository, nil
 }
 
 // Disconnect fecha a conexão com o banco de dados

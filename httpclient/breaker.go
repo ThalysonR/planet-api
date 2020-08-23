@@ -12,12 +12,14 @@ import (
 // Breaker contém um map de circuit breakers que funcionam como wrappers para executar ações custosas e com possibilidade de falha, como uma chamada http
 type Breaker struct {
 	breakers map[string]*gobreaker.CircuitBreaker
+	client   *http.Client
 }
 
 // NewBreaker retorna uma instancia de Breaker
 func NewBreaker() *Breaker {
 	return &Breaker{
 		breakers: make(map[string]*gobreaker.CircuitBreaker),
+		client:   http.DefaultClient,
 	}
 }
 
@@ -41,7 +43,7 @@ func (b *Breaker) HTTPRequest(method string, URL string, path string, body io.Re
 		if err != nil {
 			return nil, err
 		}
-		res, err := http.DefaultClient.Do(req)
+		res, err := b.client.Do(req)
 		if err != nil {
 			return nil, err
 		}

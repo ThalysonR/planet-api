@@ -27,6 +27,32 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/": {
+            "get": {
+                "description": "Retorna links para os controllers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Raiz"
+                ],
+                "summary": "Raiz",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/planetas": {
             "get": {
                 "description": "Busca paginada de planetas",
@@ -102,7 +128,7 @@ var doc = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.InsertResult"
+                            "$ref": "#/definitions/models.ResultadoInsert"
                         }
                     },
                     "400": {
@@ -185,8 +211,8 @@ var doc = `{
                             "type": "string"
                         }
                     },
-                    "404": {
-                        "description": "Not found",
+                    "400": {
+                        "description": "Bad request",
                         "schema": {
                             "type": "string"
                         }
@@ -196,14 +222,6 @@ var doc = `{
         }
     },
     "definitions": {
-        "models.InsertResult": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                }
-            }
-        },
         "models.PaginaResultado": {
             "type": "object",
             "properties": {
@@ -220,9 +238,17 @@ var doc = `{
         },
         "models.Planeta": {
             "type": "object",
+            "required": [
+                "clima",
+                "nome",
+                "terreno"
+            ],
             "properties": {
                 "_id": {
                     "type": "string"
+                },
+                "aparicoes_em_filmes": {
+                    "type": "integer"
                 },
                 "atualizado_em": {
                     "type": "string"
@@ -243,7 +269,15 @@ var doc = `{
         },
         "models.PlanetaInput": {
             "type": "object",
+            "required": [
+                "clima",
+                "nome",
+                "terreno"
+            ],
             "properties": {
+                "aparicoes_em_filmes": {
+                    "type": "integer"
+                },
                 "clima": {
                     "type": "string"
                 },
@@ -251,6 +285,14 @@ var doc = `{
                     "type": "string"
                 },
                 "terreno": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ResultadoInsert": {
+            "type": "object",
+            "properties": {
+                "id": {
                     "type": "string"
                 }
             }
