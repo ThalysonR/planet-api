@@ -44,8 +44,8 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
+                            "type": "object",
+                            "additionalProperties": {
                                 "type": "string"
                             }
                         }
@@ -225,11 +225,17 @@ var doc = `{
         "models.PaginaResultado": {
             "type": "object",
             "properties": {
+                "anterior": {
+                    "type": "string"
+                },
                 "dados": {
                     "type": "object"
                 },
                 "pagina": {
                     "type": "integer"
+                },
+                "proxima": {
+                    "type": "string"
                 },
                 "total_paginas": {
                     "type": "integer"

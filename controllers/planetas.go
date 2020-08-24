@@ -82,8 +82,8 @@ func (ct *Controller) BuscaPlanetasPaginado(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, &gin.H{"erro": "falha ao buscar planetas"})
 		return
 	}
-	prox := fmt.Sprintf("%s/api/v1/planetas?busca=%s&skip=%d&limit=%d", ct.config.ServerHost, pNome, iSkip+iLimit, iLimit)
-	anterior := fmt.Sprintf("%s/api/v1/planetas?busca=%s&skip=%d&limit=%d", ct.config.ServerHost, pNome, iSkip-iLimit, iLimit)
+	prox := fmt.Sprintf("%s/api/v1/%s?busca=%s&skip=%d&limit=%d", ct.config.ServerHost, ct.controllerNames.PlanetasController, pNome, iSkip+iLimit, iLimit)
+	anterior := fmt.Sprintf("%s/api/v1/%s?busca=%s&skip=%d&limit=%d", ct.config.ServerHost, ct.controllerNames.PlanetasController, pNome, iSkip-iLimit, iLimit)
 	if planetas.Pagina < planetas.TotalPaginas {
 		planetas.Proxima = &prox
 	}

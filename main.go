@@ -76,10 +76,10 @@ func createRouter(repo models.IRepository, config *controllers.AppConfig) *gin.E
 	v1 := api.Group("v1")
 	{
 		v1.GET("/", controller.Raiz)
-		v1.GET("/planetas/:id", controller.BuscaPlanetaPorID)
-		v1.GET("/planetas", controller.BuscaPlanetasPaginado)
-		v1.POST("/planetas", controller.InserirPlaneta)
-		v1.DELETE("/planetas/:id", controller.RemoverPlaneta)
+		v1.GET(fmt.Sprintf("/%s/:id", controller.ControllerNames().PlanetasController), controller.BuscaPlanetaPorID)
+		v1.GET(fmt.Sprintf("/%s", controller.ControllerNames().PlanetasController), controller.BuscaPlanetasPaginado)
+		v1.POST(fmt.Sprintf("/%s", controller.ControllerNames().PlanetasController), controller.InserirPlaneta)
+		v1.DELETE(fmt.Sprintf("/%s/:id", controller.ControllerNames().PlanetasController), controller.RemoverPlaneta)
 	}
 
 	return router

@@ -2,10 +2,14 @@ basePath: /api/v1
 definitions:
   models.PaginaResultado:
     properties:
+      anterior:
+        type: string
       dados:
         type: object
       pagina:
         type: integer
+      proxima:
+        type: string
       total_paginas:
         type: integer
     type: object
@@ -69,9 +73,9 @@ paths:
         "200":
           description: OK
           schema:
-            items:
+            additionalProperties:
               type: string
-            type: array
+            type: object
       summary: Raiz
       tags:
       - Raiz

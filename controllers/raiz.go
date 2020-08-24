@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"reflect"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,12 +14,14 @@ import (
 // @Tags Raiz
 // @Accept json
 // @Produce json
-// @Success 200 {array} string
+// @Success 200 {object} map[string]string
 // @Router / [get]
 func (ct *Controller) Raiz(c *gin.Context) {
 	addresses := make(map[string]string)
-	for _, address := range ct.controllerNames {
-		addresses[address] = fmt.Sprintf("%s/api/v1/%s", ct.config.ServerHost, address)
+	val := reflect.ValueOf(ct.controllerNames).Elem()
+	for i := 0; i < val.NumField(); i++ {
+		field := val.Field(i).String()
+		addresses[field] = fmt.Sprintf("%s/api/v1/%s", ct.config.ServerHost, field)
 	}
 	c.JSON(http.StatusOK, addresses)
 }
