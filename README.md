@@ -9,6 +9,8 @@ API para busca e cadastro de planetas do Star Wars. Para executar este projeto, 
 
 Valores de exemplo podem ser vistos no _docker-compose.yml_.
 
+Quando em execução, a documentação da API pode ser acessada em http://localhost:8080/swagger/index.html (Executando com as configurações atuais)
+
 ## Tecnologias
 
 As seguintes tecnologias foram usadas no projeto:
